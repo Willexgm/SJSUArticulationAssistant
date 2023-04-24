@@ -2,45 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import bs4
 from typing import List, Dict
-from dataclasses import dataclass
-
-
-@dataclass(frozen=True)
-class CommunityCollege:
-    full_name: str
-    url_name: str
-
-    def c_to_c_url(self):
-        return f"http://transfer.sjsu.edu/web-dbgen/artic/{self.url_name}/course-to-course.html"
-
-    def ge_url(self):
-        return f"http://transfer.sjsu.edu/web-dbgen/artic/{self.url_name}/ge.html"
-
-
-@dataclass(frozen=True)
-class SJSUCourse:
-    prefix: str  # CS
-    number: str  # 149
-    title: str   # Operating Systems
-
-
-@dataclass(frozen=True)
-class CCCourse:
-    prefix: str
-    number: str
-    title: str
-
-    def __repr__(self):
-        return f"{self.prefix}-{self.number}"
-
-
-@dataclass(frozen=True)
-class GE:
-    code: str  # B1
-    name: str  # Physical Science
-
-    def __repr__(self):
-        return self.code
+from helper_classes import CCCourse, SJSUCourse, GE, CommunityCollege
 
 
 def get_community_colleges():
@@ -134,6 +96,12 @@ def get_ges() -> List[GE]:
 def get_ge_equivalencies(cc: CommunityCollege) -> Dict:
     soup = BeautifulSoup(requests.get(cc.ge_url()).content, "html.parser")
 
+    if soup.find("td", string="American Institutions (US-1-2-3)") is None:
+        return
+
+    if soup.find("td", string="D--1: Sociology") is None:
+        return
+
     eqs = {
         GE("A1", "Oral Communication"): _string_to_course_list(soup.find("td", string="A-1: Oral Communication").find_next("td").text),
         GE("A2", "Written Communication"): _string_to_course_list(soup.find("td", string="A-2: Written Communication").find_next("td").text),
@@ -164,19 +132,24 @@ def get_ge_equivalencies(cc: CommunityCollege) -> Dict:
     us3 = []
     t = soup.find("td", string="American Institutions (US-1-2-3)").find_next("td")
     while t is not None:
-        t = t.find_next("td")
-        if t is None or "California Challenge Exam" in t.text:
-            break
-        spl = t.text.split("-")
-        pre = spl[0].split(" ")[0].strip(" ")
-        num = spl[0].split(" ")[1].strip(" ")
+        try:
+            t = t.find_next("td")
+            if t is None or "California Challenge Exam" in t.text:
+                break
+            spl = t.text.split("-")
+            if len(spl[0].split(" ")) < 2:
+                continue
+            pre = spl[0].split(" ")[0].strip(" ")
+            num = spl[0].split(" ")[1].strip(" ")
 
-        if "US 1" in spl[1]:
-            us1.append(CCCourse(pre, num, None))
-        if "US 2" in spl[1]:
-            us2.append(CCCourse(pre, num, None))
-        if "US 3" in spl[1]:
-            us3.append(CCCourse(pre, num, None))
+            if "US 1" in spl[1]:
+                us1.append(CCCourse(pre, num, None))
+            if "US 2" in spl[1]:
+                us2.append(CCCourse(pre, num, None))
+            if "US 3" in spl[1]:
+                us3.append(CCCourse(pre, num, None))
+        except:
+            pass
 
     eqs[GE("US1", "U.S. History")] = us1
     eqs[GE("US2", "U.S. Constitution")] = us2
@@ -206,3 +179,8 @@ def _string_to_course_list(s: str):
                 continue
             n.append(CCCourse(prefix, y, None))
     return n
+
+# get_community_colleges()
+
+# get_ges()
+
