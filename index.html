@@ -2,9 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <title>SJSU Articulation Assistant</title>
 </head>
 <body>
   <h1>SJSU Articulation Assistant</h1>
+  <div>
+    <label>Select your course: 
+      <select id="courses" name="sjsu_courses" style="width: 500px"></select>
+      <button onclick="logEqData()">Submit</button>
+    </label>
+  </div>
+  <div>
+    <ul id="course_list" style="line-height: 250%">
+    </ul>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#courses').select2();
+    });
+  </script>
+  <script>
+    async function logSJSUCourseData() {
+      const response = await fetch("/data/sjsu_courses");
+      const jsonData = await response.json();
+      console.log(jsonData);
+      var select = document.getElementById('courses');
+      for(var key in jsonData)
+      {
+        var course = jsonData[key].prefix + " " + jsonData[key].number + ": " + jsonData[key].title;
+        var option = document.createElement('option');
+        option.value = jsonData[key].id;
+        option.innerHTML = course;
+        select.appendChild(option);
+        console.log(course);
+      }
+    }
+    logSJSUCourseData();
+
+    async function logEqData() {
+      var input = document.getElementById("courses");
+      var courseId = input.options[input.selectedIndex].value;
+      //console.log(courseId);
+      const response = await fetch(`/data/course_eq?sjsu_course=${courseId}`);
+      const jsonData = await response.json();
+      console.log(jsonData);
+      var ul = document.getElementById('course_list');
+      $(ul).empty();
+      var or = false;
+      var and = false;
+      for(var key in jsonData) {
+        console.log(jsonData[key]);
+        var course = "";
+        for(var key2 in jsonData[key]) {
+          for(const key3 in jsonData[key][key2]) {
+            //console.log(jsonData[key][key2][key3]);
+            if (and == true) {
+              course += " AND " + jsonData[key][key2][key3].prefix + " " + jsonData[key][key2][key3].number + ", " + jsonData[key][key2][key3].title;
+            }
+            else if(or == true) {
+              course += " OR " + jsonData[key][key2][key3].prefix + " " + jsonData[key][key2][key3].number + ", " + jsonData[key][key2][key3].title;
+            }
+            else {
+              course = key + ": " + jsonData[key][key2][key3].prefix + " " + jsonData[key][key2][key3].number + ", " + jsonData[key][key2][key3].title;
+            }
+            
+            //console.log(course);
+            
+            and = true;
+          }
+          or = true;
+          and = false;
+        }
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(course));
+        ul.appendChild(li);
+        or = false;
+        and = false;   
+      }
+      
+    }
+  </script>
 </body>
 </html>
