@@ -26,9 +26,13 @@
       label, button, ul, li {
         font-family: 'Roboto', sans-serif;
       }
+      label, button, select{
+          vertical-align: middle;
+      }
       button {
         background-color: #5691ff;
         border: none;
+        border-radius: 4px;
         color: white;
         padding: 5.5px 20px;
         text-align: center;
@@ -50,16 +54,16 @@
 </head>
 <body>
   <h1>SJSU Articulation Assistant</h1>
-  <label>Select articulation type: 
+  <div style="margin-bottom: 1rem;">
+  <label>Select articulation type: </label>
     <select id="articulation" name="articulation" style="width: 500px">
       <option>Course-to-Course</option>
       <option>GE Area</option>
     </select>
-    <button onclick="logData()">Submit</button>
-  </label>
+<!--    <button onclick="logData()">Submit</button>-->
+  </div>
   <div>
-    <label id="label"> 
-    </label>
+    <label id="label"></label>
     <select id="courses" name="courses"></select>
     <button id="btn" onclick="">Submit</button>
   </div>
@@ -69,8 +73,10 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
-      $('#articulation').select2();
+      $('#articulation').select2({minimumResultsForSearch: Infinity});
       $('#courses').select2();
+      logData();
+      $('#articulation').on("change", logData);
     });
   </script>
   <script>
