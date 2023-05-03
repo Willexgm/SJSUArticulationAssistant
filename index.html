@@ -12,8 +12,11 @@
     <title>SJSU Articulation Assistant</title>
 
     <style>
-      h1, a {
+      h1 {
         font-family: 'Merriweather', serif;
+        color: #ffd04e;
+        background-color: #4877dd;
+        padding: 10px;
       }
       a {
         text-decoration: none;
@@ -26,13 +29,9 @@
       label, button, ul, li {
         font-family: 'Roboto', sans-serif;
       }
-      label, button, select{
-          vertical-align: middle;
-      }
       button {
-        background-color: #5691ff;
+        background-color: #6797ff;
         border: none;
-        border-radius: 4px;
         color: white;
         padding: 5.5px 20px;
         text-align: center;
@@ -48,22 +47,42 @@
         width: 500px;
         left: 168px;
         position: absolute;
-        padding: 10px
+        padding: 10px;
+        min-width: 150px;
+        font-family: 'Roboto', sans-serif;
       }
+      ul {
+        list-style: none;
+      }
+      li {
+        border-style: solid;
+        border-color: #b4b4b4;
+        border-width: thin;
+        padding: 10px;
+        margin: 2px;
+        margin-left: -10px;
+      }
+      option {
+        width: 100%;
+        font-size: 10px;
+      }
+
   </style>
 </head>
 <body>
   <h1>SJSU Articulation Assistant</h1>
-  <div style="margin-bottom: 1rem;">
-  <label>Select articulation type: </label>
+  <div class="select--wrapper">
+  <label>Select articulation type: 
     <select id="articulation" name="articulation" style="width: 500px">
-      <option>Course-to-Course</option>
-      <option>GE Area</option>
+      <option id="c2c">Course-to-Course</option>
+      <option id>GE Area</option>
     </select>
-<!--    <button onclick="logData()">Submit</button>-->
+    <button onclick="logData()">Submit</button>
+  </label>
   </div>
   <div>
-    <label id="label"></label>
+    <label id="label"> 
+    </label>
     <select id="courses" name="courses"></select>
     <button id="btn" onclick="">Submit</button>
   </div>
@@ -73,10 +92,8 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
-      $('#articulation').select2({minimumResultsForSearch: Infinity});
+      $('#articulation').select2();
       $('#courses').select2();
-      logData();
-      $('#articulation').on("change", logData);
     });
   </script>
   <script>
@@ -93,11 +110,11 @@
         for(var key in jsonData)
         {
           var course = jsonData[key].prefix + " " + jsonData[key].number + ": " + jsonData[key].title;
-          course.replace("/%A0/g", " ");
+          // course.replace("/%A0/g", " ");
           var option = document.createElement('option');
           option.value = jsonData[key].id;
           option.innerHTML = course;
-          option.style = "font-family: 'Roboto', sans-serif;"
+          option.style.fontFamily = "sans-serif";
           select.appendChild(option);
           console.log(course);
         }
@@ -126,13 +143,23 @@
       }
     }
     
+    function getURLbyName(data, name) {
+      return data.filter(
+          function(data){ return data.name == name }
+      );
+    }
+
     async function logCourseEqData() {
       var input = document.getElementById("courses");
       var courseId = input.options[input.selectedIndex].value;
       //console.log(courseId);
       const response = await fetch(`/data/course_eq?sjsu_course=${courseId}`);
       const jsonData = await response.json();
-      console.log(jsonData);
+
+      const ccs = await fetch('/data/ccs');
+      const ccsData = await ccs.json();
+      console.log(ccsData);
+
       var ul = document.getElementById('course_list');
       $(ul).empty();
       var or = false;
@@ -150,7 +177,8 @@
               course += " OR " + jsonData[key][key2][key3].prefix + " " + jsonData[key][key2][key3].number + ", " + jsonData[key][key2][key3].title;
             }
             else {
-              course = key + ": " + jsonData[key][key2][key3].prefix + " " + jsonData[key][key2][key3].number + ", " + jsonData[key][key2][key3].title;
+              mainKey = key;
+              course =  jsonData[key][key2][key3].prefix + " " + jsonData[key][key2][key3].number + ", " + jsonData[key][key2][key3].title;
             }
             
             //console.log(course);
@@ -160,9 +188,17 @@
           or = true;
           and = false;
         }
+
         var li = document.createElement("li");
-        li.appendChild(document.createTextNode(course));
+        var a = document.createElement('a');
+        var ccURL = getURLbyName(ccsData, key)[0].url;
+        a.setAttribute('href', `http://artic.sjsu.edu/web-dbgen/artic/${ccURL}/course-to-course.html`);
+        a.setAttribute('target', '_blank');
+        a.textContent = key + ": ";
+        li.append(a);
+        li.append(document.createTextNode(course));
         ul.appendChild(li);
+
         or = false;
         and = false;   
       }
@@ -175,6 +211,11 @@
       //console.log(ge_area);
       const response = await fetch(`/data/ge_eq?ge_code=${ge_area}`);
       const jsonData = await response.json();
+
+      const ccs = await fetch('/data/ccs');
+      const ccsData = await ccs.json();
+      console.log(ccsData);
+
       console.log(jsonData);
       var ul = document.getElementById('course_list');
       $(ul).empty();
@@ -193,7 +234,13 @@
         }
         course = course.substr(0,course.length-2);
         var li = document.createElement("li");
-        li.appendChild(document.createTextNode(course));
+        var a = document.createElement('a');
+        var ccURL = getURLbyName(ccsData, key)[0].url;
+        a.setAttribute('href', `http://artic.sjsu.edu/web-dbgen/artic/${ccURL}/ge.html`);
+        a.setAttribute('target', '_blank');
+        a.textContent = key + ": ";
+        li.append(a);
+        li.append(document.createTextNode(course));
         ul.appendChild(li);
       }
     }
