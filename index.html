@@ -12,11 +12,24 @@
     <title>SJSU Articulation Assistant</title>
 
     <style>
-      h1 {
+      *, *:before, *:after {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin:0;
+        padding:0;
+        width: 100%;
+      }
+      .header {
         font-family: 'Merriweather', serif;
         color: #ffd04e;
         background-color: #4877dd;
-        padding: 10px;
+        padding: 4px 20px;
+        width: 100%;
+        margin-bottom: 20px;
+        border-style:outset;
+        border-color: #ffd04e;
+        border-width: 3px;
       }
       a {
         text-decoration: none;
@@ -51,7 +64,6 @@
         width: 500px;
         left: 168px;
         position: absolute;
-        padding: 10px;
         min-width: 150px;
         font-family: 'Roboto', sans-serif;
       }
@@ -63,14 +75,13 @@
         border-color: #b4b4b4;
         border-width: thin;
         padding: 10px;
-        margin-left: -20px;
         margin-bottom: 3px;
       }
 
   </style>
 </head>
 <body>
-  <h1>SJSU Articulation Assistant</h1>
+  <div class="header"><h1>SJSU Articulation Assistant</h1></div>
   <div style="margin-bottom: 1rem;">
   <label>Select articulation type: </label>
     <select id="articulation" name="articulation" style="width: 500px">
