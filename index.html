@@ -29,6 +29,9 @@
       label, button, ul, li {
         font-family: 'Roboto', sans-serif;
       }
+      label, button, select{
+          vertical-align: middle;
+      }
       button {
         background-color: #6797ff;
         border: none;
@@ -38,6 +41,7 @@
         text-decoration: none;
         display: inline-block;
         font-size: 14px;
+        border-radius: 4px;
       }
       button:hover {
         background-color: #8cb4ff;
@@ -54,46 +58,41 @@
       ul {
         list-style: none;
       }
-      li {
+      .courseEntry, .geEntry {
         border-style: solid;
         border-color: #b4b4b4;
         border-width: thin;
         padding: 10px;
-        margin: 2px;
-        margin-left: -10px;
-      }
-      option {
-        width: 100%;
-        font-size: 10px;
+        margin-left: -20px;
+        margin-bottom: 3px;
       }
 
   </style>
 </head>
 <body>
   <h1>SJSU Articulation Assistant</h1>
-  <div class="select--wrapper">
-  <label>Select articulation type: 
+  <div style="margin-bottom: 1rem;">
+  <label>Select articulation type: </label>
     <select id="articulation" name="articulation" style="width: 500px">
-      <option id="c2c">Course-to-Course</option>
+      <option id>Course-to-Course</option>
       <option id>GE Area</option>
     </select>
-    <button onclick="logData()">Submit</button>
-  </label>
+  <!--    <button onclick="logData()">Submit</button>-->
   </div>
   <div>
-    <label id="label"> 
-    </label>
+    <label id="label"></label>
     <select id="courses" name="courses"></select>
     <button id="btn" onclick="">Submit</button>
   </div>
   <div>
-    <ul id="course_list" style="line-height: 250%">
-    </ul>
+    <ul id="course_list" style="line-height: 250%"></ul>
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
-      $('#articulation').select2();
+      $('#articulation').select2({minimumResultsForSearch: Infinity});
       $('#courses').select2();
+      logData();
+      $('#articulation').on("change", logData);
     });
   </script>
   <script>
@@ -195,6 +194,7 @@
         a.setAttribute('href', `http://artic.sjsu.edu/web-dbgen/artic/${ccURL}/course-to-course.html`);
         a.setAttribute('target', '_blank');
         a.textContent = key + ": ";
+        li.className = "courseEntry";
         li.append(a);
         li.append(document.createTextNode(course));
         ul.appendChild(li);
@@ -239,6 +239,7 @@
         a.setAttribute('href', `http://artic.sjsu.edu/web-dbgen/artic/${ccURL}/ge.html`);
         a.setAttribute('target', '_blank');
         a.textContent = key + ": ";
+        li.className = "geEntry";
         li.append(a);
         li.append(document.createTextNode(course));
         ul.appendChild(li);
