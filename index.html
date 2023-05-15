@@ -143,7 +143,7 @@
         {
           var option = document.createElement('option');
           option.value = jsonData[key].code;
-          option.innerHTML = jsonData[key].name;
+          option.innerHTML = jsonData[key].code + " - "  + jsonData[key].name;
           select.appendChild(option);
           console.log(jsonData[key].code);
         }

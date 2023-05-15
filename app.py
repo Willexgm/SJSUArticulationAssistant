@@ -37,7 +37,6 @@ def course_eq():
 def ge_eq():
     database.set_connection(get_db())
 
-    print(database.join_from_GEEq(request.args['ge_code']))
     j = {}
     for CPrefix, CNumber, CTitle, CCName in database.join_from_GEEq(request.args['ge_code']):
         if CCName not in j:
@@ -57,7 +56,7 @@ def ccs():
 @app.route('/data/ges')
 def ges():
     database.set_connection(get_db())
-    j = [{"code":x[0], "name":x[0]} for x in database.select_all_from_SJSUGenEd()]
+    j = [{"code":x[0], "name":x[1]} for x in database.select_all_from_SJSUGenEd()]
     return j
 
 
