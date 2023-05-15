@@ -45,6 +45,9 @@
       label, button, select{
           vertical-align: middle;
       }
+      label {
+        margin-left: 40px;
+      }
       button {
         background-color: #6797ff;
         border: none;
@@ -84,7 +87,7 @@
   <div class="header"><h1>SJSU Articulation Assistant</h1></div>
   <div style="margin-bottom: 1rem;">
   <label>Select articulation type: </label>
-    <select id="articulation" name="articulation" style="width: 500px">
+    <select id="articulation" name="articulation" style="width: 500px;">
       <option id>Course-to-Course</option>
       <option id>GE Area</option>
     </select>
@@ -236,7 +239,7 @@
         var first = true;
         for(var key2 in jsonData[key]) {
             if(first) {
-                course += key + ": " + jsonData[key][key2].prefix + " " + jsonData[key][key2].number + ", ";
+                course += jsonData[key][key2].prefix + " " + jsonData[key][key2].number + ", ";
             }
             else {
                 course += jsonData[key][key2].prefix + " " + jsonData[key][key2].number + ", ";
