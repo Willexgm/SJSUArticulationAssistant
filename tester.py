@@ -3,6 +3,7 @@ import database
 from app import app
 import requests
 import threading
+import json
 
 
 if __name__ == '__main__':
@@ -26,8 +27,8 @@ if __name__ == '__main__':
     thread.start()
 
     # Print out the json responses for each endpoint. We will manually make sure that it matches what we expect.
-    print(requests.get("http://127.0.0.1:8000/data/ccs").json())
-    print(requests.get("http://127.0.0.1:8000/data/sjsu_courses").json())
-    print(requests.get("http://127.0.0.1:8000/data/ges").json())
-    print(requests.get("http://127.0.0.1:8000/data/course_eq?sjsu_course=1").json())
-    print(requests.get("http://127.0.0.1:8000/data/ge_eq?ge_code=TC").json())
+    print("Community Colleges\n", json.dumps(requests.get("http://127.0.0.1:8000/data/ccs").json(), indent=2))
+    print("\nSJSU Courses\n", json.dumps(requests.get("http://127.0.0.1:8000/data/sjsu_courses").json(), indent=2))
+    print("\nGEs\n", json.dumps(requests.get("http://127.0.0.1:8000/data/ges").json(), indent=2))
+    print("\nCourse Equivalency\n", json.dumps(requests.get("http://127.0.0.1:8000/data/course_eq?sjsu_course=1").json(), indent=2))
+    print("\nGE Equivalency", json.dumps(requests.get("http://127.0.0.1:8000/data/ge_eq?ge_code=TC").json(), indent=2))
