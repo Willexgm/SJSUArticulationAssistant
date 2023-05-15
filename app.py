@@ -63,7 +63,7 @@ def ges():
 @app.route('/data/sjsu_courses')
 def sjsu_courses():
     database.set_connection(get_db())
-    j = [{"id": x[0], "prefix": x[1], "number": x[2], "title": x[3]} for x in database.select_all_from_SJSUCourses()]
+    j = [{"id": x[0], "prefix": x[1], "number": x[2].lstrip("0"), "title": x[3]} for x in database.select_all_from_SJSUCourses()]
     return j
 
 
