@@ -1,3 +1,4 @@
+import config
 from flask import Flask, request, send_file, g
 import sqlite3
 import database
@@ -8,7 +9,7 @@ app = Flask(__name__)
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect('database_0.db')
+        db = g._database = sqlite3.connect(config.DB_NAME)
     return db
 
 

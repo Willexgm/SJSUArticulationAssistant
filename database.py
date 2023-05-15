@@ -1,6 +1,7 @@
+import config
 import sqlite3
 
-connection = sqlite3.connect('database_0.db')
+connection = sqlite3.connect(config.DB_NAME)
 
 
 def set_connection(conn):
