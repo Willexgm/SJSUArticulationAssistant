@@ -16,6 +16,11 @@ if __name__ == '__main__':
     # Insert test data into the database.
     database.insert_into_CC(Name="Test College", URL="TESTC")
     # TODO: Insert more data into the db to allow us to fully test each of the flask data endpoints
+    database.insert_into_CCCourses(CCID=1, Prefix="Test Prefix", Number=222, Title="Test CC Course")
+    database.insert_into_SJSUCourses(Prefix="Test Prefix", Number=111, Title="Test SJSU Course")
+    database.insert_into_SJSUGenEd(Code="TC", Name="Test GE Name")
+    database.insert_into_CToCEq(SJSUCourseID=1, CCCourseID=1, SetID=3)
+    database.insert_into_GEEq(Code="TC", CCCourseID=1, SetID=3)
 
     # Run the webserver in its own thread, so we can make requests to it.
     threading.Thread(target=app.run, kwargs={'host': "0.0.0.0", 'port': 8000}).start()
@@ -23,3 +28,8 @@ if __name__ == '__main__':
     # Print out the json response. We will manually make sure that it matches what we expect.
     print(requests.get("http://127.0.0.1:8000/data/ccs").json())
     # TODO: Print out the json responses for each of the other flask endpoints.
+    print(requests.get("http://127.0.0.1:8000/data/sjsu_courses").json())
+    print(requests.get("http://127.0.0.1:8000/data/ges").json())
+    print(requests.get("http://127.0.0.1:8000/data/course_eq?sjsu_course=1").json())
+    print(requests.get("http://127.0.0.1:8000/data/ge_eq?ge_code=TC").json())
+
