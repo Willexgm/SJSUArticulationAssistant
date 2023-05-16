@@ -22,6 +22,27 @@ if __name__ == '__main__':
     database.insert_into_CToCEq(SJSUCourseID=1, CCCourseID=1, SetID=3)
     database.insert_into_GEEq(Code="TC", CCCourseID=1, SetID=3)
 
+    database.insert_into_CC(Name="San Joaquin Delta College", URL="SJDCCourseCatalogLink")
+    database.insert_into_CCCourses(CCID=2, Prefix="MATH", Number=230, Title="SJDCTestCourse")
+    database.insert_into_SJSUCourses(Prefix="MATH", Number=130, Title="SJSUSJDCTestCourse")
+    database.insert_into_SJSUGenEd(Code="TM", Name="Test GE Math Name")
+    database.insert_into_CToCEq(SJSUCourseID=2, CCCourseID=2, SetID=3)
+    database.insert_into_GEEq(Code="TM", CCCourseID=2, SetID=3)
+
+    database.insert_into_CC(Name="De Anza Ciy College", URL="DACCCourseCatalogLink")
+    database.insert_into_CCCourses(CCID=3, Prefix="ENG", Number=440, Title="DACCTestCourse")
+    database.insert_into_SJSUCourses(Prefix="ENG", Number=340, Title="SJSUDACCTestCourse")
+    database.insert_into_SJSUGenEd(Code="TE", Name="Test GE English Name")
+    database.insert_into_CToCEq(SJSUCourseID=3, CCCourseID=3, SetID=3)
+    database.insert_into_GEEq(Code="TE", CCCourseID=3, SetID=3)
+
+    database.insert_into_CC(Name="San Jose City College", URL="SJCCCourseCatalogLink")
+    database.insert_into_CCCourses(CCID=4, Prefix="Hist", Number=550, Title="SJCCTestCourse")
+    database.insert_into_SJSUCourses(Prefix="Hist", Number=450, Title="SJSUSJCCCTestCourse")
+    database.insert_into_SJSUGenEd(Code="TH", Name="Test GE History Name")
+    database.insert_into_CToCEq(SJSUCourseID=4, CCCourseID=4, SetID=3)
+    database.insert_into_GEEq(Code="TH", CCCourseID=4, SetID=3)
+
     # Run the webserver in its own thread, so we can make requests to it.
     thread = threading.Thread(target=app.run, kwargs={'host': "0.0.0.0", 'port': 8000})
     thread.start()
