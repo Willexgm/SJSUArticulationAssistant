@@ -7,9 +7,9 @@ Build the image using the Dockerfile
 ```
 Start a container with port 80 mapped to 8000
 ```
-% docker run -p 80:8000 articulation_assistant
+% docker run -p 8000:8000 articulation_assistant
 ```
-You can access the application through `http://127.0.0.0` in a browser
+You can access the application through `http://127.0.0.0:8000` in a browser
 
 ## Flask App Endpoints
 `GET /data/ccs`
